@@ -50,14 +50,17 @@ fn fix_update(rules: &Rules, update: &[u8]) -> Vec<u8> {
     let mut new: Vec<u8> = Vec::from(update);
 
     new.sort_by(|a, b| {
-        let precedes = match rules.get(a) {
-            Some(prec) => prec,
-            None => return Ordering::Equal,
-        };
-        if precedes.contains(b) {
-            return Ordering::Less;
+        use Ordering::*;
+        match rules.get(a) {
+            Some(precedes) => {
+                if precedes.contains(b) {
+                    Less
+                } else {
+                    Greater
+                }
+            }
+            None => Equal,
         }
-        Ordering::Greater
     });
 
     new
