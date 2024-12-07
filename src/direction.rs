@@ -16,6 +16,39 @@ pub enum Direction {
     West,
 }
 
+impl Direction {
+    pub fn from_char(ch: char) -> Result<Self, &'static str> {
+        use Direction::*;
+        Ok(match ch {
+            '^' => North,
+            '>' => East,
+            'v' => South,
+            '<' => West,
+            _ => return Err("Invalid direction character"),
+        })
+    }
+
+    /// Rotates a direction 90 degrees `quarters` times. Positive
+    /// quarter counts rotate clockwise and negative values turn
+    /// counter-clockwise.
+    pub fn rotate(self, quarters: isize) -> Self {
+        use Direction::*;
+        let rotations = quarters.rem_euclid(4);
+        let mut new_direction = self;
+
+        for _ in 0..rotations {
+            new_direction = match new_direction {
+                North => East,
+                East => South,
+                South => West,
+                West => North,
+            };
+        }
+
+        new_direction
+    }
+}
+
 impl AsVector for Direction {
     fn as_vector<T: Num + Neg<Output = T>>(self) -> Vector2d<T> {
         match self {
