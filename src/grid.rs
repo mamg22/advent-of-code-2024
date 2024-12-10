@@ -1,5 +1,7 @@
 use std::slice::Iter;
 
+use crate::vector::Vector2d;
+
 pub struct Grid<T> {
     width: usize,
     height: usize,
@@ -42,6 +44,13 @@ impl<T: Default + Clone> Grid<T> {
         self.data.iter()
     }
 
+    pub fn item_indices(&self) -> impl Iterator<Item = (Vector2d<usize>, &T)> {
+        self.data
+            .iter()
+            .enumerate()
+            .map(|(idx, item)| (Vector2d::new(idx % self.width, idx / self.height), item))
+    }
+
     pub fn get(&self, x: usize, y: usize) -> Option<&T> {
         if x > self.width - 1 || y > self.height - 1 {
             None
@@ -57,5 +66,9 @@ impl<T: Default + Clone> Grid<T> {
             self.data[y * self.width + x] = value;
             Ok(())
         }
+    }
+
+    pub fn has_position(&self, position: Vector2d<usize>) -> bool {
+        position.x < self.width && position.y < self.height
     }
 }
