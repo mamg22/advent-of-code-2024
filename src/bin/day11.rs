@@ -7,7 +7,7 @@ fn has_even_digits(number: u64) -> bool {
 }
 
 fn split_number(number: u64) -> (u64, u64) {
-    let n_digits = (number.ilog10() + 1);
+    let n_digits = number.ilog10() + 1;
     let denominator = 10u64.pow(n_digits / 2);
 
     (number / denominator, number % denominator)
